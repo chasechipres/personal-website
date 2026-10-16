@@ -44,6 +44,10 @@ Numbers in the dashboard: `font-variant-numeric: tabular-nums`.
 - **Cards:** `--surface`, radius 12px (images inside 8px), 1px `--border`,
   shadow `0 1px 2px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.05)` ~ (none in dark mode).
   Whole card is the link; image on top, title 21px/600, one muted line below.
+- **Theme toggle:** icon button in the nav (44px target, sun/moon icon, `aria-label` says the mode it switches to).
+  Default follows the system (`prefers-color-scheme`); a click sets `data-theme="light|dark"` on `<html>`
+  and saves it to `localStorage`. An inline script in `<head>` applies the saved theme before first paint
+  (no flash). Switching themes is instant, never animated.
 
 ## Mobile
 Build mobile-first; every page must pass at 375px wide before desktop polish.
