@@ -58,8 +58,15 @@ Build mobile-first; every page must pass at 375px wide before desktop polish.
 - Layout holds at 200% text zoom. Check light and dark mode on a real phone before shipping.
 
 ## Motion
-Minimal. Hover and press: color, opacity and shadow only, 150ms ease-out ~.
-No entrance animations, no layout transitions, no parallax. Respect `prefers-reduced-motion`.
+Minimal. One easing everywhere: `cubic-bezier(0.2, 0, 0, 1)`. No bounce or elastic.
+- Durations: 150ms hover/press, 200ms menus and sheets, never over 300ms.
+- Hover: color, opacity and shadow only. Press: buttons and cards `scale(0.98)`.
+- Mobile menu: sheet fades in and moves 8px down over 200ms; closes in 150ms.
+- Live trade feed: new rows appear instantly; background fades from 10% `--accent` to clear over 600ms. No sliding rows.
+- P&L numbers: swap instantly, `tabular-nums`, no count-up. Gain/loss color tints the number only.
+- Focus rings appear instantly, never animated.
+- No entrance animations, layout transitions or parallax.
+- `prefers-reduced-motion`: all transitions 0ms; the new-row tint shows for 600ms, then clears without fading.
 
 ## Never
 Purple or blue gradients, gradient text, glow, neon, particles, glassmorphism beyond the nav,
