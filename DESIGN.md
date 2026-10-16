@@ -44,6 +44,8 @@ Numbers in the dashboard: `font-variant-numeric: tabular-nums`.
 - **Cards:** `--surface`, radius 12px (images inside 8px), 1px `--border`,
   shadow `0 1px 2px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.05)` ~ (none in dark mode).
   Whole card is the link; image on top, title 21px/600, one muted line below.
+- **Profile links** (GitHub, LinkedIn, email): secondary pill buttons under the hero line and plain links
+  in the footer. Never cards; the card grid is for projects only.
 - **Preview card (coming soon):** same shell and size as a card, but not a link: no hover, no press.
   The image area is a wireframe of what's coming (e.g. 3 stat tiles, a line chart, 3-4 rows) drawn as
   plain shapes in `--muted`/`--border` at 50% opacity: no text, no numbers, no accent or gain/loss color.
