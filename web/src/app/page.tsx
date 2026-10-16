@@ -12,7 +12,7 @@ export default function Home() {
           <p className={styles.lead}>From iOS apps to backend systems.</p>
           <p className={styles.body}>
             I use AI to build a little bit of everything. Lately, that&apos;s a 24/7 agentic trading
-            bot and the live dashboard behind this site.
+            bot, with a live dashboard for it coming soon.
           </p>
           <p className={styles.location}>Seattle, WA · SoCal born and raised</p>
           <ul className={styles.links}>

@@ -23,8 +23,10 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
       <body>
         <header className={styles.nav}>
           <div className={styles.navInner}>
-            <Link href="/" className={styles.name}>
-              Chase Chipres
+            <Link href="/" className={styles.home} aria-label="Chase Chipres, home">
+              <span className={styles.monogram} aria-hidden="true">
+                CC
+              </span>
             </Link>
             <ThemeToggle />
           </div>
