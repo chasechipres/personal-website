@@ -26,7 +26,10 @@ and a live dashboard for [rh-gex-trader](#rh-gex-trader-live-dashboard), my opti
 What's running today.
 
 **Deploys and operations**
-- **Continuous deployment.** Every push to `main` that touches the site is linted, built and
+- **Pull-request workflow.** `main` is protected: changes land through squash-merged pull
+  requests, and a required CI check (install, lint, build) must pass first. Force-pushes and
+  branch deletion are blocked.
+- **Continuous deployment.** Every merge to `main` that touches the site is linted, built and
   deployed by GitHub Actions. Deploys are serialized, so two merges can't race each other.
 - **Atomic releases.** Every deploy uploads to its own `releases/<timestamp>/` folder, then a
   `current` symlink is swapped with a single rename. Visitors get the old site or the new one,
@@ -152,8 +155,9 @@ for `linux/arm64`.
 
 ## Deploy
 
-**Automatic:** push or merge to `main`. The [Deploy workflow](.github/workflows/deploy.yml) runs
-lint, build, deploy and a live check. To roll back, open Actions → Deploy → Run workflow →
+**Automatic:** open a pull request; once the [CI check](.github/workflows/ci.yml) passes, squash-merge
+it. The [Deploy workflow](.github/workflows/deploy.yml) then runs lint, build, deploy and a live
+check. To roll back, open Actions → Deploy → Run workflow →
 `rollback`.
 
 **From a laptop** (fallback, same script CI uses):
