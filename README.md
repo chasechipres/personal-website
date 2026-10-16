@@ -150,6 +150,14 @@ mise exec -C web -- pnpm install
 mise exec -C web -- pnpm dev      # http://localhost:3000
 ```
 
+Claude Code commands (in `.claude/skills/`):
+
+| Command | Does |
+|---|---|
+| `/start-web-server` | Starts the dev server in the background on http://localhost:3000 |
+| `/stop-web-server` | Stops whatever node process holds port 3000 |
+| `/rollback` | Shows the live and previous releases, then (after you confirm) rolls back through the Deploy workflow |
+
 The VM is ARM (`aarch64`): Go builds will use `GOARCH=arm64`, and Docker images will be built
 for `linux/arm64`.
 
