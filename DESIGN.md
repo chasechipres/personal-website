@@ -45,6 +45,18 @@ Numbers in the dashboard: `font-variant-numeric: tabular-nums`.
   shadow `0 1px 2px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.05)` ~ (none in dark mode).
   Whole card is the link; image on top, title 21px/600, one muted line below.
 
+## Mobile
+Build mobile-first; every page must pass at 375px wide before desktop polish.
+- Breakpoints: base styles for phones, `min-width: 768px` tablet, `min-width: 1024px` desktop.
+- No horizontal page scroll. Wide content (dashboard tables, charts) scrolls inside its own container
+  or reflows into stacked cards.
+- Nav: below 768px, links collapse into a menu button (44px target); the menu is a full-width sheet.
+- Tap targets at least 44x44px with 8px between them. Body text and form inputs never below 16px
+  (inputs under 16px make iOS zoom in); Small and Caption are for labels only.
+- Card grid: 1 column on phones, 2 on tablet, 3 on desktop.
+- Use `100dvh`, not `100vh`, and respect `env(safe-area-inset-*)` for the sticky nav and anything fixed.
+- Layout holds at 200% text zoom. Check light and dark mode on a real phone before shipping.
+
 ## Motion
 Minimal. Hover and press: color, opacity and shadow only, 150ms ease-out ~.
 No entrance animations, no layout transitions, no parallax. Respect `prefers-reduced-motion`.
