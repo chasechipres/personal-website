@@ -61,8 +61,8 @@ The centerpiece: a live view of the bot's trades and performance.
 ## Roadmap
 
 - [x] Design system: tokens, type scale, components, mobile and motion rules ([DESIGN.md](DESIGN.md))
-- [ ] **v1:** Next.js site with intro, profile links, project cards, light/dark toggle
-- [ ] Deploy script: build locally, sync the static export to the VM
+- [x] **v1:** Next.js site with intro, profile links, project cards, light/dark toggle
+- [x] Deploy script: atomic releases with one-command rollback
 - [ ] Go API skeleton: health check, config, structured logging, tests
 - [ ] Postgres schema and migrations for trades; idempotent ingest endpoint
 - [ ] Redis caching for summaries; SSE live feed
@@ -71,28 +71,39 @@ The centerpiece: a live view of the bot's trades and performance.
 - [ ] Live GitHub activity card (cached GitHub API)
 - [ ] More projects, each with a short write-up
 
-## Repo layout (planned)
+## Repo layout
 
 ```
 web/      Next.js app (pages, components, project content)
-api/      Go service
-deploy/   nginx config, docker-compose.yml
+deploy/   deploy script and nginx config
+api/      Go service (planned)
 ```
 
 ## Development
 
-Tool versions will be pinned in `mise.toml` so Windows and macOS builds match. The VM is ARM
-(`aarch64`): Go builds use `GOARCH=arm64`, and Docker images are built for `linux/arm64`.
+Tool versions are pinned in `mise.toml` so Windows and macOS builds match.
 
-## Deploy (current)
-
-Until the deploy script lands, the live site is a static page copied to the VM by hand
-(replace `<vm-ip>` with the VM's public IP from the Oracle console):
-
-```powershell
-ssh -i $HOME\.ssh\oracle.key ubuntu@<vm-ip> "rm -rf ~/site-upload && mkdir ~/site-upload"
-scp -i $HOME\.ssh\oracle.key index.html style.css ubuntu@<vm-ip>:~/site-upload/
-ssh -i $HOME\.ssh\oracle.key ubuntu@<vm-ip> "sudo cp -r ~/site-upload/* /var/www/html/ && sudo chown -R www-data:www-data /var/www/html"
+```bash
+mise install                      # Node, pnpm and Go at the pinned versions
+mise exec -C web -- pnpm install
+mise exec -C web -- pnpm dev      # http://localhost:3000
 ```
 
-Then purge the Cloudflare cache (Caching → Purge Everything) or hard-refresh.
+The VM is ARM (`aarch64`): Go builds will use `GOARCH=arm64`, and Docker images will be built
+for `linux/arm64`.
+
+## Deploy
+
+```bash
+deploy/deploy.sh             # build web/, upload a new release, switch to it, verify
+deploy/deploy.sh --rollback  # switch back to the previous release
+```
+
+- Each deploy lands in `/var/www/chasechipres/releases/<timestamp>/`; a `current` symlink is
+  swapped in one atomic rename, so visitors never see a half-uploaded site. The last 5 releases
+  are kept.
+- nginx config lives in [`deploy/nginx/chasechipres.conf`](deploy/nginx/chasechipres.conf):
+  hashed assets are cached for a year, HTML always revalidates.
+- `DEPLOY_HOST` (default `chasechipres-web`) is an SSH host, usually an alias in `~/.ssh/config`.
+  The server's IP is intentionally kept out of this repo so Cloudflare can't be bypassed.
+- Needs `mise`, `ssh`, `tar` and `curl`. On Windows, run it from Git Bash.
