@@ -12,7 +12,7 @@ not measured from the reference sites.
 | `--panel` (alt sections) | `#eee9e2` (Dropbox) | `#1c180d` |
 | `--text` | `#1e1919` (Dropbox) | `#f5f5f7` (Apple) |
 | `--muted` | `#5f574c` ~ | `#a8a29a` ~ |
-| `--accent` | `#0071e3` (Apple) | `#2997ff` (Apple) |
+| `--accent` | `#0071e3` (Apple) | `#f5f5f7` (off-white; blue clashed with the warm dark bg) |
 | `--border` | `rgba(30,25,25,.10)` ~ | `rgba(245,245,247,.10)` ~ |
 
 The accent is the only color. Use it for primary buttons and links, nothing else.
@@ -39,8 +39,8 @@ Numbers in the dashboard: `font-variant-numeric: tabular-nums`.
 
 ## Components
 - **Nav:** sticky, 44px tall, `--bg` at 80% opacity with `backdrop-filter: saturate(1.8) blur(20px)` (Apple).
-- **Buttons:** pill, `border-radius: 980px`, padding 11px 21px, 17px/400. Primary: `--accent` fill, white text.
-  Secondary: transparent, 1px `--accent` border and text. Min tap height 44px.
+- **Buttons:** pill, `border-radius: 980px`, padding 11px 21px, 17px/400. Primary: `--accent` fill, `--bg` text.
+  Secondary: transparent, 1px `--accent` border and text; on hover, fills like primary. Min tap height 44px.
 - **Cards:** `--surface`, radius 12px (images inside 8px), 1px `--border`,
   shadow `0 1px 2px rgba(0,0,0,.06), 0 4px 12px rgba(0,0,0,.05)` ~ (none in dark mode).
   Whole card is the link; image on top, title 21px/600, one muted line below.

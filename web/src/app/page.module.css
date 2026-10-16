@@ -63,7 +63,7 @@
 
 .pill:hover {
   background: var(--accent);
-  color: #fff;
+  color: var(--bg);
 }
 
 .pill:active {
