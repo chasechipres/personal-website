@@ -1,0 +1,32 @@
+name: CI
+
+# Required check for pull requests into main. No secrets, no deploy.
+on:
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    name: check
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    env:
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v5
+      - uses: jdx/mise-action@v3
+      - name: Install
+        run: mise exec -C web -- pnpm install --frozen-lockfile
+      - name: Lint
+        run: mise exec -C web -- pnpm lint
+      - name: Build
+        run: mise exec -C web -- pnpm build
+      - name: Check shell scripts parse
+        run: bash -n deploy/deploy.sh && bash -n .claude/hooks/docs-check.sh

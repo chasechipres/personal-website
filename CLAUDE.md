@@ -3,9 +3,15 @@
 Personal website for https://chasechipres.com. See README.md for hosting and deploy.
 
 ## Shipping
-Pushing to `main` deploys to production through GitHub Actions (`.github/workflows/deploy.yml`).
-Don't push to `main` without the user's go-ahead. `deploy/deploy.sh --rollback` (or the
-workflow's "rollback" option) restores the previous release.
+`main` is protected and every merge to it deploys to production
+(`.github/workflows/deploy.yml`). Work goes through pull requests:
+1. Branch from an up-to-date `main` (`feat/…`, `fix/…`, `chore/…`, `docs/…`).
+2. Commit, push the branch, open a PR with `gh pr create`. Reference issues with "Closes #N".
+3. The `check` job (`.github/workflows/ci.yml`: lint, build) must pass.
+4. Squash-merge only, and only with the user's go-ahead; merging ships it.
+Never push to `main` directly or use the admin bypass unless the user asks for an emergency fix.
+`deploy/deploy.sh --rollback` (or the Deploy workflow's "rollback" option) restores the previous
+release.
 
 ## Keep docs current
 When a change adds, removes or changes what the site can do, update the docs in the same change:
