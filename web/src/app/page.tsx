@@ -9,12 +9,12 @@ export default function Home() {
       <section className={styles.hero}>
         <div className={styles.intro}>
           <h1 className={styles.title}>Chase Chipres</h1>
-          <p className={styles.lead}>iOS developer turned backend developer.</p>
+          <p className={styles.lead}>From iOS apps to backend systems.</p>
           <p className={styles.body}>
-            Passionate about AI and using it to build a little bit of everything, starting with a
-            24/7 agentic trading bot and this site.
+            I use AI to build a little bit of everything. Lately, that&apos;s a 24/7 agentic trading
+            bot and the live dashboard behind this site.
           </p>
-          <p className={styles.location}>Seattle, WA · Born and raised in SoCal</p>
+          <p className={styles.location}>Seattle, WA · SoCal born and raised</p>
           <ul className={styles.links}>
             {profileLinks.map((link) => (
               <li key={link.label}>

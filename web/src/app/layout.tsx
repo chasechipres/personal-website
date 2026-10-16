@@ -8,7 +8,7 @@ import "./globals.css";
 export const metadata: Metadata = {
   title: "Chase Chipres",
   description:
-    "iOS developer turned backend developer, using AI to build a little bit of everything.",
+    "From iOS apps to backend systems. I use AI to build a little bit of everything.",
 };
 
 // Applies a saved theme before first paint so dark-mode visitors never see a light flash.
