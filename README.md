@@ -19,18 +19,20 @@ and a live dashboard for [rh-gex-trader](#rh-gex-trader-live-dashboard), my opti
 | Database | Postgres | Planned |
 | Cache and live fan-out | Redis | Planned |
 | Containers | Docker Compose | Planned |
-| CI/CD | GitHub Actions | Planned |
+| CI/CD | GitHub Actions | Live |
 
 ## Capabilities
 
 What's running today.
 
 **Deploys and operations**
+- **Continuous deployment.** Every push to `main` that touches the site is linted, built and
+  deployed by GitHub Actions. Deploys are serialized, so two merges can't race each other.
 - **Atomic releases.** Every deploy uploads to its own `releases/<timestamp>/` folder, then a
   `current` symlink is swapped with a single rename. Visitors get the old site or the new one,
   never a mix.
-- **One-command rollback.** `deploy/deploy.sh --rollback` points `current` back at the previous
-  release instantly, with no rebuild or re-upload.
+- **One-click rollback.** Run the Deploy workflow with "rollback" (or `deploy/deploy.sh --rollback`
+  locally) to point `current` back at the previous release instantly, with no rebuild or re-upload.
 - **Release retention.** The 5 most recent releases are kept on the server; older ones are pruned
   on each deploy.
 - **Post-deploy verification.** The deploy script fetches the live page through Cloudflare and
@@ -61,6 +63,9 @@ What's running today.
 **Security and privacy**
 - **Origin IP kept out of the repo.** Deploys use an SSH alias, so the public source doesn't
   reveal the server's address behind Cloudflare.
+- **Least-privilege deploys.** CI deploys as a dedicated `deploy` user that can only write the
+  website folder (no sudo, no port forwarding), using its own key stored as a GitHub secret. The
+  server's host key is pinned, so CI won't talk to an impostor.
 - **Hardened access.** SSH is key-only (no passwords); only ports 22, 80 and 443 are open;
   security updates install automatically.
 - **No leaked metadata.** Photos are re-encoded with EXIF data (including GPS location) removed.
@@ -112,7 +117,7 @@ Planned. The centerpiece: a live view of the bot's trades and performance.
 - [x] Design system: tokens, type scale, components, mobile and motion rules ([DESIGN.md](DESIGN.md))
 - [x] **v1:** Next.js site with intro, profile links, project cards, light/dark toggle
 - [x] Deploy script: atomic releases with one-command rollback
-- [ ] Deploy on merge to `main` with GitHub Actions ([#1](https://github.com/chasechipres/personal-website/issues/1))
+- [x] Deploy on merge to `main` with GitHub Actions ([#1](https://github.com/chasechipres/personal-website/issues/1))
 - [ ] Only accept web traffic from Cloudflare ([#2](https://github.com/chasechipres/personal-website/issues/2))
 - [ ] Server hygiene: backups, unused user, update cadence ([#3](https://github.com/chasechipres/personal-website/issues/3))
 - [ ] Pre-launch quality pass: custom 404, social preview, keyboard and zoom checks ([#4](https://github.com/chasechipres/personal-website/issues/4))
@@ -147,6 +152,12 @@ for `linux/arm64`.
 
 ## Deploy
 
+**Automatic:** push or merge to `main`. The [Deploy workflow](.github/workflows/deploy.yml) runs
+lint, build, deploy and a live check. To roll back, open Actions → Deploy → Run workflow →
+`rollback`.
+
+**From a laptop** (fallback, same script CI uses):
+
 ```bash
 deploy/deploy.sh             # build web/, upload a new release, switch to it, verify
 deploy/deploy.sh --rollback  # switch back to the previous release
@@ -157,6 +168,7 @@ deploy/deploy.sh --rollback  # switch back to the previous release
   are kept.
 - nginx config lives in [`deploy/nginx/chasechipres.conf`](deploy/nginx/chasechipres.conf):
   hashed assets are cached for a year, HTML always revalidates.
-- `DEPLOY_HOST` (default `chasechipres-web`) is an SSH host, usually an alias in `~/.ssh/config`.
-  The server's IP is intentionally kept out of this repo so Cloudflare can't be bypassed.
+- `DEPLOY_HOST` (default `chasechipres-deploy`) is an SSH host for the `deploy` user, usually an
+  alias in `~/.ssh/config`. The server's IP is intentionally kept out of this repo so Cloudflare
+  can't be bypassed; CI reads it from the `DEPLOY_HOST_IP` secret.
 - Needs `mise`, `ssh`, `tar` and `curl`. On Windows, run it from Git Bash.
