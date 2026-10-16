@@ -3,23 +3,72 @@
 Source for [chasechipres.com](https://chasechipres.com): a personal site, a home for my projects,
 and a live dashboard for [rh-gex-trader](#rh-gex-trader-live-dashboard), my options trading bot.
 
-> **Status:** early. The design system is in place ([DESIGN.md](DESIGN.md)); the app is being
-> built in the open. See the [roadmap](#roadmap).
+> **Status:** v1 is live. The static site and deploy pipeline are done; the Go API and live
+> dashboard are next. Built in the open: see the [roadmap](#roadmap) and
+> [issues](https://github.com/chasechipres/personal-website/issues).
 
 ## Stack
 
-| Layer | Tech |
-|---|---|
-| Frontend | Next.js (static export), React, TypeScript |
-| API | Go |
-| Database | Postgres |
-| Cache and live fan-out | Redis |
-| Edge | Cloudflare (DNS, CDN, TLS) |
-| Serving | nginx, Docker Compose |
-| Hosting | Oracle Cloud, Ubuntu 24.04 on ARM (VM.Standard.A1.Flex, 1 OCPU / 6 GB) |
-| CI/CD | GitHub Actions (planned) |
+| Layer | Tech | Status |
+|---|---|---|
+| Frontend | Next.js (static export), React, TypeScript | Live |
+| Serving | nginx | Live |
+| Edge | Cloudflare (DNS, CDN, TLS) | Live |
+| Hosting | Oracle Cloud, Ubuntu 24.04 on ARM (VM.Standard.A1.Flex, 1 OCPU / 6 GB) | Live |
+| API | Go | Planned |
+| Database | Postgres | Planned |
+| Cache and live fan-out | Redis | Planned |
+| Containers | Docker Compose | Planned |
+| CI/CD | GitHub Actions | Planned |
+
+## Capabilities
+
+What's running today.
+
+**Deploys and operations**
+- **Atomic releases.** Every deploy uploads to its own `releases/<timestamp>/` folder, then a
+  `current` symlink is swapped with a single rename. Visitors get the old site or the new one,
+  never a mix.
+- **One-command rollback.** `deploy/deploy.sh --rollback` points `current` back at the previous
+  release instantly, with no rebuild or re-upload.
+- **Release retention.** The 5 most recent releases are kept on the server; older ones are pruned
+  on each deploy.
+- **Post-deploy verification.** The deploy script fetches the live page through Cloudflare and
+  fails loudly (with the rollback command) if the new content isn't being served.
+- **Zero-downtime config changes.** nginx config is versioned in the repo, validated with
+  `nginx -t` before every reload, and the server's old config is kept as a backup.
+- **Automatic TLS renewal.** Let's Encrypt certificates renew on a systemd timer; renewal is
+  verified with a dry run after config changes.
+- **Reproducible tooling.** Node, pnpm and Go versions are pinned with `mise`, and line endings are
+  normalized to LF, so builds match on Windows and macOS.
+
+**Performance**
+- **Static export.** Pages are pre-rendered HTML; there's no Node server in production.
+- **Split cache strategy.** Content-hashed build assets are served with
+  `Cache-Control: public, max-age=31536000, immutable`; HTML is `no-cache`, so deploys show up
+  immediately while assets stay cached at the edge and in browsers.
+- **Lean media.** The hero photo is resized for the web (1600 px, ~260 KB).
+
+**Frontend**
+- **Light and dark themes.** Follows the system setting by default; a toggle saves the choice.
+  An inline script applies it before first paint, so there's no flash of the wrong theme.
+- **Design tokens.** Every color, size, radius and shadow comes from [DESIGN.md](DESIGN.md).
+- **Mobile-first.** No horizontal scrolling at 375 px, 44 px minimum tap targets, safe-area
+  insets for notched phones.
+- **Accessible.** Keyboard focus rings, labeled controls, decorative graphics hidden from screen
+  readers, `prefers-reduced-motion` respected.
+
+**Security and privacy**
+- **Origin IP kept out of the repo.** Deploys use an SSH alias, so the public source doesn't
+  reveal the server's address behind Cloudflare.
+- **Hardened access.** SSH is key-only (no passwords); only ports 22, 80 and 443 are open;
+  security updates install automatically.
+- **No leaked metadata.** Photos are re-encoded with EXIF data (including GPS location) removed.
 
 ## Architecture
+
+The target design. Today the visitor → Cloudflare → nginx → static site path is live; the API,
+database and live feed are on the [roadmap](#roadmap).
 
 ```
 visitors (HTTPS, SSE)        rh-gex-trader (separate host)
@@ -46,7 +95,7 @@ nginx, the static site, the Go API, Postgres and Redis all run on one VM.
 
 ## rh-gex-trader live dashboard
 
-The centerpiece: a live view of the bot's trades and performance.
+Planned. The centerpiece: a live view of the bot's trades and performance.
 
 - **Idempotent ingestion.** The trader sends each trade with an `Idempotency-Key`. A unique
   constraint in Postgres guarantees a retried request is stored exactly once, and the retry gets
@@ -63,12 +112,16 @@ The centerpiece: a live view of the bot's trades and performance.
 - [x] Design system: tokens, type scale, components, mobile and motion rules ([DESIGN.md](DESIGN.md))
 - [x] **v1:** Next.js site with intro, profile links, project cards, light/dark toggle
 - [x] Deploy script: atomic releases with one-command rollback
-- [ ] Go API skeleton: health check, config, structured logging, tests
-- [ ] Postgres schema and migrations for trades; idempotent ingest endpoint
-- [ ] Redis caching for summaries; SSE live feed
-- [ ] Live dashboard replaces the "coming soon" preview card
-- [ ] GitHub Actions: test, build arm64 images, deploy on push to `main`
-- [ ] Live GitHub activity card (cached GitHub API)
+- [ ] Deploy on merge to `main` with GitHub Actions ([#1](https://github.com/chasechipres/personal-website/issues/1))
+- [ ] Only accept web traffic from Cloudflare ([#2](https://github.com/chasechipres/personal-website/issues/2))
+- [ ] Server hygiene: backups, unused user, update cadence ([#3](https://github.com/chasechipres/personal-website/issues/3))
+- [ ] Pre-launch quality pass: custom 404, social preview, keyboard and zoom checks ([#4](https://github.com/chasechipres/personal-website/issues/4))
+- [ ] Go API skeleton: health check, config, structured logging, tests ([#5](https://github.com/chasechipres/personal-website/issues/5))
+- [ ] Run the API on the VM with Docker Compose ([#6](https://github.com/chasechipres/personal-website/issues/6))
+- [ ] Postgres schema and idempotent trade ingestion ([#7](https://github.com/chasechipres/personal-website/issues/7))
+- [ ] Redis caching and SSE live feed ([#8](https://github.com/chasechipres/personal-website/issues/8))
+- [ ] Live rh-gex-trader dashboard ([#9](https://github.com/chasechipres/personal-website/issues/9))
+- [ ] Live GitHub activity card ([#10](https://github.com/chasechipres/personal-website/issues/10))
 - [ ] More projects, each with a short write-up
 
 ## Repo layout
