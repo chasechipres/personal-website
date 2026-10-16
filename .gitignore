@@ -1,0 +1,3 @@
+# Machine-specific Claude Code files
+.claude/launch.json
+.claude/settings.local.json

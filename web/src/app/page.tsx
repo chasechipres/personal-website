@@ -1,69 +1,53 @@
 import Image from "next/image";
+import PreviewCard from "@/components/PreviewCard";
+import { profileLinks } from "@/content/links";
 import styles from "./page.module.css";
 
 export default function Home() {
   return (
-    <div className={styles.page}>
-      <main className={styles.main}>
+    <main>
+      <section className={styles.hero}>
+        <div className={styles.intro}>
+          <h1 className={styles.title}>Chase Chipres</h1>
+          <p className={styles.lead}>iOS developer turned backend developer.</p>
+          <p className={styles.body}>
+            Passionate about AI and using it to build a little bit of everything, starting with a
+            24/7 agentic trading bot and this site.
+          </p>
+          <p className={styles.location}>Seattle, WA · Born and raised in SoCal</p>
+          <ul className={styles.links}>
+            {profileLinks.map((link) => (
+              <li key={link.label}>
+                <a className={styles.pill} href={link.href} {...link.external}>
+                  {link.label}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </div>
         <Image
-          className={styles.logo}
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
+          className={styles.photo}
+          src="/hero.jpg"
+          alt="Rooftop selfie at sunset above the Seattle skyline"
+          width={1600}
+          height={1200}
           priority
         />
-        <div className={styles.intro}>
-          <h1>
-            To get started, edit the{" "}
-            <code className={styles.code}>page.tsx</code> file.
-          </h1>
-          <p>
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+      </section>
+
+      <section className={styles.projects} aria-labelledby="projects-title">
+        <h2 id="projects-title" className={styles.sectionTitle}>
+          Projects
+        </h2>
+        <div className={styles.grid}>
+          <PreviewCard
+            title="rh-gex-trader"
+            description="An options-trading bot that sizes and times trades from dealer gamma exposure, with hard risk guardrails."
+            badge="Live dashboard — coming soon"
+            previewLabel="Preview of the upcoming live trading dashboard"
+          />
         </div>
-        <div className={styles.ctas}>
-          <a
-            className={styles.primary}
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className={styles.logo}
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className={styles.secondary}
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
-      </main>
-    </div>
+      </section>
+    </main>
   );
 }

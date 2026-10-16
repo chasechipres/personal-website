@@ -1,150 +1,127 @@
-.page {
-  --background: #fafafa;
-  --foreground: #fff;
+.hero,
+.projects {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 64px 16px;
+}
 
-  --text-primary: #000;
-  --text-secondary: #666;
-
-  --button-primary-hover: #383838;
-  --button-secondary-hover: #f2f2f2;
-  --button-secondary-border: #ebebeb;
-
-  display: flex;
-  flex: 1;
-  flex-direction: column;
+.hero {
+  display: grid;
+  gap: 32px;
   align-items: center;
-  justify-content: center;
-  font-family: var(--font-geist-sans);
-  background-color: var(--background);
 }
 
-.main {
-  display: flex;
-  flex: 1;
-  width: 100%;
-  max-width: 800px;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: space-between;
-  background-color: var(--foreground);
-  padding: 120px 60px;
-}
-
-.intro {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  text-align: left;
-  gap: 24px;
-}
-
-.intro h1 {
-  max-width: 320px;
+.title {
   font-size: 40px;
+  line-height: 44px;
   font-weight: 600;
-  line-height: 48px;
-  letter-spacing: -2.4px;
-  text-wrap: balance;
-  color: var(--text-primary);
+  letter-spacing: -0.28px;
 }
 
-.intro p {
-  max-width: 440px;
-  font-size: 18px;
+.lead {
+  margin-top: 12px;
+  font-size: 28px;
   line-height: 32px;
-  text-wrap: balance;
-  color: var(--text-secondary);
+  letter-spacing: 0.196px;
 }
 
-.intro a {
-  font-weight: 500;
-  color: var(--text-primary);
+.body {
+  margin-top: 16px;
+  max-width: 34em;
+  color: var(--muted);
 }
 
-.ctas {
-  display: flex;
-  flex-direction: row;
-  width: 100%;
-  max-width: 440px;
-  gap: 16px;
+.location {
+  margin-top: 12px;
   font-size: 14px;
+  line-height: 18px;
+  letter-spacing: -0.224px;
+  color: var(--muted);
 }
 
-.ctas a {
+.links {
   display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 40px;
-  padding: 0 16px;
-  border-radius: 128px;
-  border: 1px solid transparent;
-  transition: 0.2s;
-  cursor: pointer;
-  width: fit-content;
-  font-weight: 500;
-}
-
-a.primary {
-  background: var(--text-primary);
-  color: var(--background);
+  flex-wrap: wrap;
   gap: 8px;
+  margin-top: 24px;
+  list-style: none;
 }
 
-a.secondary {
-  border-color: var(--button-secondary-border);
+.pill {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 11px 21px;
+  border: 1px solid var(--accent);
+  border-radius: 980px;
+  color: var(--accent);
+  font-size: 17px;
+  line-height: 20px;
+  text-decoration: none;
+  transition: background-color 150ms var(--ease), color 150ms var(--ease);
 }
 
-/* Enable hover only on non-touch devices */
-@media (hover: hover) and (pointer: fine) {
-  a.primary:hover {
-    background: var(--button-primary-hover);
-    border-color: transparent;
+.pill:hover {
+  background: var(--accent);
+  color: #fff;
+}
+
+.pill:active {
+  transform: scale(0.98);
+}
+
+.photo {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+}
+
+.sectionTitle {
+  font-size: 32px;
+  line-height: 36px;
+  font-weight: 600;
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 24px;
+  margin-top: 32px;
+}
+
+@media (min-width: 768px) {
+  .hero,
+  .projects {
+    padding: 96px 24px;
   }
 
-  a.secondary:hover {
-    background: var(--button-secondary-hover);
-    border-color: transparent;
+  .projects {
+    padding-top: 0;
+  }
+
+  .grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .sectionTitle {
+    font-size: 40px;
+    line-height: 44px;
   }
 }
 
-@media (max-width: 600px) {
-  .main {
-    padding: 48px 24px;
+@media (min-width: 1024px) {
+  .hero {
+    grid-template-columns: 1fr 1fr;
+    gap: 64px;
   }
 
-  .intro {
-    gap: 16px;
+  .title {
+    font-size: 56px;
+    line-height: 60px;
   }
 
-  .intro h1 {
-    font-size: 32px;
-    line-height: 40px;
-    letter-spacing: -1.92px;
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
   }
-}
-
-@media (prefers-color-scheme: dark) {
-  .logo {
-    filter: invert();
-  }
-
-  .page {
-    --background: #000;
-    --foreground: #000;
-
-    --text-primary: #ededed;
-    --text-secondary: #999;
-
-    --button-primary-hover: #ccc;
-    --button-secondary-hover: #1a1a1a;
-    --button-secondary-border: #1a1a1a;
-  }
-}
-
-.code {
-  font-family: var(--font-geist-mono);
-  font-size: 0.9em;
-  background: color-mix(in srgb, currentColor 8%, transparent);
-  padding: 0.1em 0.4em;
-  border-radius: 6px;
 }
