@@ -28,7 +28,7 @@ What's running today.
 **Deploys and operations**
 - **Pull-request workflow.** `main` is protected: changes land through squash-merged pull
   requests, and a required CI check (install, lint, build) must pass first. Force-pushes and
-  branch deletion are blocked.
+  branch deletion are blocked, and the rules have no admin bypass.
 - **Continuous deployment.** Every merge to `main` that touches the site is linted, built and
   deployed by GitHub Actions. Deploys are serialized, so two merges can't race each other.
 - **Atomic releases.** Every deploy uploads to its own `releases/<timestamp>/` folder, then a

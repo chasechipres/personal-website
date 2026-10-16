@@ -9,7 +9,8 @@ Personal website for https://chasechipres.com. See README.md for hosting and dep
 2. Commit, push the branch, open a PR with `gh pr create`. Reference issues with "Closes #N".
 3. The `check` job (`.github/workflows/ci.yml`: lint, build) must pass.
 4. Squash-merge only, and only with the user's go-ahead; merging ships it.
-Never push to `main` directly or use the admin bypass unless the user asks for an emergency fix.
+The `main` ruleset has no bypass, not even for admins. For an emergency the user temporarily
+disables the "Protect main" ruleset in repo settings; never do that yourself.
 `deploy/deploy.sh --rollback` (or the Deploy workflow's "rollback" option) restores the previous
 release.
 
