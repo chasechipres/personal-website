@@ -12,10 +12,11 @@ not measured from the reference sites.
 | `--panel` (alt sections) | `#eee9e2` (Dropbox) | `#1c180d` |
 | `--text` | `#1e1919` (Dropbox) | `#f5f5f7` (Apple) |
 | `--muted` | `#5f574c` ~ | `#a8a29a` ~ |
-| `--accent` | `#0071e3` (Apple) | `#f5f5f7` (off-white; blue clashed with the warm dark bg) |
+| `--accent` | `#2a2420` (warm ink) | `#c9c1b4` (soft warm off-white) |
 | `--border` | `rgba(30,25,25,.10)` ~ | `rgba(245,245,247,.10)` ~ |
 
-The accent is the only color. Use it for primary buttons and links, nothing else.
+The palette is monochrome and warm: the accent is a soft ink/off-white, not a hue (bright blues read
+too loud on the warm backgrounds). Use it for primary buttons, links and the monogram, nothing else.
 Dashboard gain/loss may add green `#1f9d55` ~ and red `#d64545` ~, on numbers only.
 
 ## Type
