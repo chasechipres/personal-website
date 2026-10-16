@@ -1,0 +1,67 @@
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "web/**"
+      - "deploy/**"
+      - "mise.toml"
+      - ".github/workflows/deploy.yml"
+  workflow_dispatch:
+    inputs:
+      action:
+        description: "deploy builds and ships main; rollback switches to the previous release"
+        type: choice
+        options: [deploy, rollback]
+        default: deploy
+
+# One deploy at a time; a newer push waits instead of racing the current one.
+concurrency:
+  group: deploy-production
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment:
+      name: production
+      url: https://chasechipres.com
+    env:
+      DEPLOY_HOST: chasechipres-deploy
+      NEXT_TELEMETRY_DISABLED: "1"
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Configure SSH
+        env:
+          DEPLOY_SSH_KEY: ${{ secrets.DEPLOY_SSH_KEY }}
+          DEPLOY_HOST_IP: ${{ secrets.DEPLOY_HOST_IP }}
+          DEPLOY_KNOWN_HOSTS: ${{ secrets.DEPLOY_KNOWN_HOSTS }}
+        run: |
+          install -d -m 700 ~/.ssh
+          printf '%s\n' "$DEPLOY_SSH_KEY" > ~/.ssh/deploy_key && chmod 600 ~/.ssh/deploy_key
+          printf '%s\n' "$DEPLOY_KNOWN_HOSTS" > ~/.ssh/known_hosts
+          printf 'Host %s\n  HostName %s\n  User deploy\n  IdentityFile ~/.ssh/deploy_key\n  IdentitiesOnly yes\n  StrictHostKeyChecking yes\n' \
+            "$DEPLOY_HOST" "$DEPLOY_HOST_IP" > ~/.ssh/config
+
+      - name: Roll back
+        if: github.event_name == 'workflow_dispatch' && inputs.action == 'rollback'
+        run: deploy/deploy.sh --rollback
+
+      - uses: jdx/mise-action@v2
+        if: github.event_name == 'push' || inputs.action == 'deploy'
+
+      - name: Install, lint
+        if: github.event_name == 'push' || inputs.action == 'deploy'
+        run: |
+          mise exec -C web -- pnpm install --frozen-lockfile
+          mise exec -C web -- pnpm lint
+
+      - name: Build, deploy, verify
+        if: github.event_name == 'push' || inputs.action == 'deploy'
+        run: deploy/deploy.sh

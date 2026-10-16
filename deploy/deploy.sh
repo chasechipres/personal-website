@@ -5,11 +5,12 @@
 # symlink in one rename, so visitors never see a half-uploaded site. The last
 # 5 releases are kept; roll back with: deploy/deploy.sh --rollback
 #
-# DEPLOY_HOST is an SSH host (an alias from ~/.ssh/config works). The VM's IP
-# is kept out of this public repo so Cloudflare can't be bypassed.
+# DEPLOY_HOST is an SSH host for the restricted "deploy" user (an alias from
+# ~/.ssh/config works). The VM's IP is kept out of this public repo so
+# Cloudflare can't be bypassed. CI runs this same script on push to main.
 set -euo pipefail
 
-HOST="${DEPLOY_HOST:-chasechipres-web}"
+HOST="${DEPLOY_HOST:-chasechipres-deploy}"
 BASE=/var/www/chasechipres
 KEEP=5
 cd "$(dirname "$0")/.."
